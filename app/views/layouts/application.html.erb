@@ -1,13 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Firstapp</title>
+  <title>RoR for SSS</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
+    <% if notice %>
+   <p class="notice"><%= notice %></p>
+    <% end %>
+    <% if alert %>
+   <p class="alert"><%= alert %></p>
+    <% end %>
 
+    <% if user_signed_in? %>
+    <ul>
+        <li>Welcome, <%= current_user.email %></li>
+        <li><%= link_to 'Edit Profile', edit_user_registration_path %></li>
+        <li><%= link_to 'My Articles', articles_path %></li>
+        <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
+    </ul>
+    <% end %>
 <%= yield %>
 
 </body>

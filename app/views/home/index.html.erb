@@ -1,3 +1,8 @@
 <h1>Hello world</h1>
-<p>Welcome to my home</p>
+<p>Welcome to <%= current_user.email %>'s home</p>
+<% if !user_signed_in? %>
+<%= link_to 'Sign in', controller: 'devise/sessions', action: 'new' %>
+or <%= link_to 'Sign up', controller: 'devise/registrations', action: 'new' %>
+<% else %>
 <%= link_to 'My Articles', controller: 'articles' %>
+<% end %>
