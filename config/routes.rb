@@ -3,8 +3,6 @@ Rails.application.routes.draw do
     resources :articles do
         resources :comments
     end
-    
-    get 'home', controller: 'home', action: 'index'
 
     root 'articles#index'
 
