@@ -1,17 +1,6 @@
 <h2>Article <%= @article.id %></h2>
-<div>
-    <strong>File Path:</strong>
-    <%= @article.file_path %>
-</div>
-<div>
-    <strong>Description:</strong>
-    <%= @article.description %>
-</div>
-<div>
-    <%= raw(@article.hash_tags.map{ |t| 
-    link_to "#" + t.name
-    }.join(' ')) %>
-</div>
+
+<%= render 'article', article: @article %>
 
 <%= link_to 'Edit', edit_article_path %>
 <%= link_to 'Back', articles_path %>

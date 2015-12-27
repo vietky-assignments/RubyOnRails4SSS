@@ -5,13 +5,20 @@ class Article < ActiveRecord::Base
     validates :description, presence: true, length: { minimum: 10 }
     validates :user_id, presence: true
 
+    def self.search(tag)
+        tag = '%'+remove_hash_if_not_exist(tag)+'%'
+        where('id IN (SELECT article_id FROM hash_tags WHERE (name like :tag))', :tag => tag)
+    end
+
     def add_tags(tags)
-        hash_tags.each do |tag|
-            tag.destroy
+        if hash_tags
+            hash_tags.each do |tag|
+                tag.destroy
+            end
         end
 
         tags.split(' ').each do |tag|
-            hash_tags.new(:name => remove_hash_if_not_exist(tag))
+            hash_tags.new(:name => self.class.remove_hash_if_not_exist(tag))
         end
     end
     
@@ -25,13 +32,12 @@ class Article < ActiveRecord::Base
     
     private
     
-    def remove_hash_if_not_exist(tag)
-        if tag.length < 1
-            return tag
-        else
-            if tag.start_with?('#')
+    def self.remove_hash_if_not_exist(tag)
+        if tag.start_with?('#')
+            if tag.length > 1
                 return tag[1,tag.length]
             end
         end
+        return tag
     end
 end

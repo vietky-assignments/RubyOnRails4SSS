@@ -1,0 +1,15 @@
+<div>
+    <strong>File Path:</strong>
+    <%= article.file_path %>
+</div>
+<div>
+    <strong>Description:</strong>
+    <%= article.description %>
+</div>
+<div>
+    <strong>Tag: </strong>
+    <%= raw(article.hash_tags.map{ |t| 
+    raw(link_to "#" + t.name, search_path(:search => "#" + t.name), :method => :get)
+    }.join(' ')) %>
+</div>
+<hr />
