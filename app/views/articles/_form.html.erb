@@ -19,8 +19,7 @@
 </div>
 <div>
     <%= f.label :hash_tags %><br/>
-    <%= f.text_field :hash_tags %>
-</div>
+    <%= f.text_field :hash_tags, value: f.object.hash_tags.map{ |t| "#" + t.name }.join(' ') %></div>
 <div>
     <%= f.submit %>
 </div>

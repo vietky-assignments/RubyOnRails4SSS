@@ -14,6 +14,8 @@ class ArticlesController < ApplicationController
     def create
         #render plain: params[:article].inspect
         @article = current_user.articles.build(article_params)
+        @article.add_tags(params[:article][:hash_tags])
+
         if @article.save
             flash.alert = 'Created article successfully'
             redirect_to @article
@@ -23,7 +25,12 @@ class ArticlesController < ApplicationController
     end
     
     def update
-        if @article.update(article_params)
+        @article.description = params[:article][:description]
+        @article.file_path = params[:article][:file_path]
+        @article.add_tags(params[:article][:hash_tags]);
+
+        if @article.save
+            flash.alert = 'Updated article successfully'
             redirect_to @article
         else
             render 'edit'

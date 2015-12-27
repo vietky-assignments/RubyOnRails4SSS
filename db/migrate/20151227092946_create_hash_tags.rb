@@ -7,7 +7,7 @@ class CreateHashTags < ActiveRecord::Migration
       t.timestamps null: false
     end
       
-      add_index :hash_tags, :name, unique: true
+      add_index :hash_tags, [:article_id, :name]
       add_foreign_key :hash_tags, :articles
   end
 end

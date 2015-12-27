@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20151227092946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "hash_tags", ["name"], name: "index_hash_tags_on_name", unique: true
+  add_index "hash_tags", ["article_id", "name"], name: "index_hash_tags_on_article_id_and_name"
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
