@@ -5,9 +5,11 @@
 <%= link_to 'Edit', edit_article_path %>
 <%= link_to 'Back', articles_path %>
 
-<h2>Comments</h2>
+<hr />
+<h2>Comments (<%= @article.comments.count %>)</h2>
 <%= render @article.comments %>
 
+<hr />
 <h2>Add comment:</h2>
 
 <%= render 'comments/form' %>
