@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
     before_action :authenticate_user!
     before_action :authorized_user, :only => [:show, :edit, :update, :destroy]
-    before_action :check_permission, :only => [:create, :update, :destroy]
+    before_action :check_permission, :only => [:update, :destroy]
     
     def index
         @articles = current_user.articles
@@ -12,11 +12,10 @@ class ArticlesController < ApplicationController
     end
 
     def create
-        #render plain: params[:article].inspect
         @article = current_user.articles.build(article_params)
-        @article.add_tags(params[:article][:hash_tags])
-
         if @article.save
+            @article.add_tags(params[:article][:hash_tags])
+
             flash.alert = 'Created article successfully'
             redirect_to @article
         else

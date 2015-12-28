@@ -1,3 +1,6 @@
+require 'active_record'
+require 'activerecord-import'
+
 class Article < ActiveRecord::Base
     has_many :comments, dependent: :destroy
     has_many :hash_tags
@@ -6,28 +9,23 @@ class Article < ActiveRecord::Base
     validates :user_id, presence: true
 
     def self.search(tag)
-        tag = '%'+remove_hash_if_not_exist(tag)+'%'
-        where('id IN (SELECT article_id FROM hash_tags WHERE (name like :tag))', :tag => tag)
+        tag = remove_hash_if_not_exist(tag)
+        where(:id => HashTag.where("name like ?", "%#{tag}%").select("article_id"))
     end
 
     def add_tags(tags)
-        if hash_tags
-            hash_tags.each do |tag|
-                tag.destroy
-            end
-        end
+        #TODO: need transaction here
+        HashTag.delete_all(:article_id => id)
 
-        tags.split(' ').each do |tag|
-            hash_tags.new(:name => self.class.remove_hash_if_not_exist(tag))
-        end
-    end
-    
-    def import_tags(tags)
         htags = []
         tags.split(' ').each do |tag|
-            htags << HashTag.new(:article_id => self.id, :name => tag)
+            htags << HashTag.new(:article_id => self.id, :name => self.class.remove_hash_if_not_exist(tag))
         end
         HashTag.import htags
+
+        #tags.split(' ').each do |tag|
+        #    hash_tags.new(:name => self.class.remove_hash_if_not_exist(tag))
+        #end
     end
     
     private
