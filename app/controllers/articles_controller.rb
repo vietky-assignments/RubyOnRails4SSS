@@ -24,11 +24,9 @@ class ArticlesController < ApplicationController
     end
     
     def update
-        @article.description = params[:article][:description]
-        @article.file_path = params[:article][:file_path]
-        @article.add_tags(params[:article][:hash_tags]);
+        if @article.update(article_params)
+            @article.add_tags(params[:article][:hash_tags]);
 
-        if @article.save
             flash.alert = 'Updated article successfully'
             redirect_to @article
         else
@@ -43,9 +41,9 @@ class ArticlesController < ApplicationController
 
     private
     def article_params
-        params.require(:article).permit(:description, :file_path)
+        params.require(:article).permit(:description, :picture)
     end
-    
+
     def authorized_user
         @article = current_user.articles.find_by_id(params[:id])
         redirect_to root_path if @article.nil?

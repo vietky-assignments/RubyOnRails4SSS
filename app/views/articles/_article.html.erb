@@ -1,6 +1,5 @@
 <div>
-    <strong>File Path:</strong>
-    <%= article.file_path %>
+    <%= image_tag article.picture.url if article.picture? %>
 </div>
 <div>
     <strong>Description:</strong>
