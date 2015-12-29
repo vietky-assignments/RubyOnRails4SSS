@@ -5,3 +5,19 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+5.times do |u|
+    email = "exampleruser#{u}@fakeemail.com"
+    password = '12345678'
+    user = User.create!(
+        email: email,
+        password: password
+    )
+
+    20.times do |p|
+        article = user.articles.create!(
+            description: Faker::Lorem.paragraph
+        )
+        article.add_tags(Faker::Lorem.words(10).join(' '))
+    end
+end

@@ -1,5 +1,11 @@
-<h3><%= link_to "Article " + article.id.to_s, article_path(:id=> article.id) %> (Author: <%= user_link(article.user) %>
-)</h3>
+<h3><%= link_to "Article " + article.id.to_s, article_path(:id=> article.id) %> (Author: 
+    <% if current_user?(article.user) %>
+    You
+    <% else %>
+    <%= user_link(article.user) %>
+    <% end %>
+)
+</h3>
 <div>
     <%= image_tag article.picture.url if article.picture? %>
 </div>

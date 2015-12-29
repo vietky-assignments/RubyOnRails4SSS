@@ -9,4 +9,7 @@
 
 <h2>Search Result (<%= @articles.count %> )</h2>
 
+<%= will_paginate @articles %>
 <%= render partial: 'articles/article', collection: @articles %>
+<%= will_paginate @articles %>
+

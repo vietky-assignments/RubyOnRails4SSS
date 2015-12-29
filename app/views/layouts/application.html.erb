@@ -8,10 +8,10 @@
 </head>
 <body>
     <% if notice %>
-   <p class="notice"><%= notice %></p>
+    <p class="notice" style="color:red;" ><b><%= notice %></b></p>
     <% end %>
     <% if alert %>
-   <p class="alert"><%= alert %></p>
+    <p class="alert" style="color:blue;"><b><%= alert %></b></p>
     <% end %>
 
     <% if user_signed_in? %>

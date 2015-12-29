@@ -6,15 +6,15 @@ class UsersController < ApplicationController
     
     def show
         if params[:id]
-            user = User.find(params[:id])
+            @user = User.find_by_id(params[:id])
         else
-            user = current_user
+            @user = current_user
         end
 
-        if user
-            @articles = user.articles
+        if @user
+            @articles = @user.articles.paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
         else
-            redirect_to user_path
+            redirect_to new_user_session_path
         end
     end
 end

@@ -1,23 +1,29 @@
 <h1>
-<% if current_user?(@articles.first.user) %>
+<% if current_user?(@user) %>
     Your
 <% else %>
-<%= user_link(@articles.first.user) %>'s
+<%= user_link(@user) %>'s
 <% end %>
 Articles</h1>
 
-<%= link_to 'New Article', new_article_path if current_user?(@articles.first.user) %>
+<%= link_to 'New Article', new_article_path if current_user?(@user) %>
+
+<%= will_paginate @articles %>
 
 <table border="1px;">
     <tr>
         <th>Description</th>
         <th>Image</th>
+        <th>Tags</th>
         <th>Action</th>
     </tr>
     <% @articles.each do |article| %>
     <tr>
         <td><%= article.description %></td>
         <td><%= image_tag article.picture.url if article.picture? %></td>
+        <td><%= raw(article.hash_tags.map{ |t|
+    raw(link_to "#" + t.name, search_path(:search => "#" + t.name), :method => :get)
+    }.join(' ')) %></td>
         <td>
             <%= link_to 'Show', article_path(article) %>
             <% if current_user?(article.user) %>
@@ -28,3 +34,5 @@ Articles</h1>
     <% end %>
     </tr>
 </table>
+
+<%= will_paginate @articles %>
