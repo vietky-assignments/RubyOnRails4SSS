@@ -1,9 +1,7 @@
-<h2>Article <%= @article.id %></h2>
-
 <%= render 'article', article: @article %>
 
-<%= link_to 'Edit', edit_article_path %>
-<%= link_to 'Back', articles_path %>
+<%= link_to 'Edit', edit_article_path if current_user?(@article.user) %>
+<%= link_to 'Back', user_path(:id => @article.user.id) %>
 
 <hr />
 <h2>Comments (<%= @article.comments.count %>)</h2>

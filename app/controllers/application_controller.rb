@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
     
     protected
     def after_sign_in_path_for(resource)
-        articles_path
+        user_path(:id => current_user.id)
     end
 end

@@ -1,14 +1,14 @@
 class ArticlesController < ApplicationController
     before_action :authenticate_user!
-    before_action :authorized_user, :only => [:show, :edit, :update, :destroy]
+    before_action :authorized_user, :only => [:edit, :update, :destroy]
     before_action :check_permission, :only => [:update, :destroy]
-    
-    def index
-        @articles = current_user.articles
-    end
 
     def new
         @article = Article.new
+    end
+
+    def show
+        @article = Article.find_by_id(params[:id])
     end
 
     def create

@@ -17,8 +17,8 @@
     <% if user_signed_in? %>
     <ul>
         <li>Welcome, <%= current_user.email %></li>
-        <li><%= link_to 'Edit Profile', edit_user_registration_path %></li>
-        <li><%= link_to 'My Articles', articles_path %></li>
+        <li><%= link_to 'My Profile', user_path(:id => current_user.id) %></li>
+        <li><%= link_to 'Change Password', edit_user_registration_path %></li>
         <li><%= link_to 'Search', search_path %></li>
         <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
     </ul>

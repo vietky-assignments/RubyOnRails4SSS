@@ -1,11 +1,12 @@
 Rails.application.routes.draw do
   devise_for :users
-    resources :articles do
-        resources :comments
+    resources :users, only: [:index, :show]
+    resources :articles, except: :index do
+        resources :comments, only: [:create, :destroy]
     end
     
     get '/search/', to: 'search#index'
-    root 'articles#index'
+    root 'users#show'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

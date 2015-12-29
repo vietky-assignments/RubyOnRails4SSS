@@ -9,6 +9,8 @@ class Article < ActiveRecord::Base
     validates :description, presence: true, length: { minimum: 10 }
     validates :user_id, presence: true
     validate  :picture_size
+    default_scope { order('articles.updated_at DESC') }
+    #default_scope :order => 'article.updated_at DESC'
 
     def self.search(tag)
         tag = remove_hash_if_not_exist(tag)
@@ -20,7 +22,7 @@ class Article < ActiveRecord::Base
         HashTag.delete_all(:article_id => id)
 
         htags = []
-        tags.split(' ').each do |tag|
+        tags.split(' ').uniq.each do |tag|
             htags << HashTag.new(:article_id => self.id, :name => self.class.remove_hash_if_not_exist(tag))
         end
         HashTag.import htags
