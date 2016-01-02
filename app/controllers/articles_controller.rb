@@ -13,23 +13,43 @@ class ArticlesController < ApplicationController
 
     def create
         @article = current_user.articles.build(article_params)
-        if @article.save
-            @article.add_tags(params[:article][:hash_tags])
-
+        begin
+            success = true
+            ActiveRecord::Base.transaction do
+                success &&= @article.save
+                if success
+                    tags = HashTag.create_tags(params[:article][:hash_tags])
+                    success &&= tags.nil?
+                    rels = ArticlesHashTagsRelationship.create_relationships(@article, tags)
+                    success &&= rels.nil?
+                else
+                    raise ActiveRecord::RecordInvalid.new(@article)
+                end
+            end
             flash.alert = 'Created article successfully'
-            redirect_to @article
-        else
+            redirect_to action: 'show', id: @article.id
+        rescue ActiveRecord::RecordInvalid => e
             render 'new'
         end
     end
     
     def update
-        if @article.update(article_params)
-            @article.add_tags(params[:article][:hash_tags]);
-
+        begin
+            success = true
+            ActiveRecord::Base.transaction do
+                success &&= @article.update(article_params)
+                if success
+                    tags = HashTag.create_tags(params[:article][:hash_tags])
+                    success &&= tags.nil?
+                    rels = ArticlesHashTagsRelationship.create_relationships(@article, tags)
+                    sucess &&= rels.nil?
+                else
+                    raise ActiveRecord::RecordInvalid.new(@article)
+                end
+            end
             flash.alert = 'Updated article successfully'
-            redirect_to @article
-        else
+            redirect_to action: 'show', id: @article.id
+        rescue ActiveRecord::RecordInvalid => e
             render 'edit'
         end
     end

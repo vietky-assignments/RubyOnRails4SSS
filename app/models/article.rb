@@ -15,43 +15,17 @@ class Article < ActiveRecord::Base
     #default_scope :order => 'article.updated_at DESC'
 
     def self.search(tag)
-        tag = remove_hash_if_not_exist(tag)
-        where(:id => HashTag.where("name like ?", "%#{tag}%").select("article_id"))
+        tag = HashTag.remove_hash_if_not_exist(tag)
+        Article.where(:id => ArticlesHashTagsRelationship.where(:hash_tag_id => HashTag.where("name like ?", "%#{tag}%")).select("article_id"))
+        .includes('hash_tags')
+        .includes('user')
     end
 
-    def add_tags(tags)
-        #TODO: need transaction here
-        #HashTag.delete_all(:article_id => id)
-        ArticlesHashTagsRelationship.delete_all(:article_id => id)
-
-        htags = []
-        allTags = tags.split(' ').uniq
-        HashTags.create
-
-        allTags.each do |tag|
-            htags << HashTag.new(:name => self.class.remove_hash_if_not_exist(tag))
-        end
-        HashTag.import htags
-
-        #tags.split(' ').each do |tag|
-        #    hash_tags.new(:name => self.class.remove_hash_if_not_exist(tag))
-        #end
-    end
-    
     private
     
     def picture_size
         if picture.size > 5.megabytes
             errors.add(:picture, "should be less than 5MB")
         end
-    end
-
-    def self.remove_hash_if_not_exist(tag)
-        if tag.start_with?('#')
-            if tag.length > 1
-                return tag[1,tag.length]
-            end
-        end
-        return tag
     end
 end
