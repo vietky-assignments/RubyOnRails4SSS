@@ -3,7 +3,9 @@ require 'activerecord-import'
 
 class Article < ActiveRecord::Base
     has_many :comments, dependent: :destroy
-    has_many :hash_tags
+    has_many :articles_hash_tags_relationships
+    has_many :hash_tags, through: :articles_hash_tags_relationships
+
     belongs_to :user
     mount_uploader :picture, PictureUploader
     validates :description, presence: true, length: { minimum: 10 }
@@ -19,11 +21,15 @@ class Article < ActiveRecord::Base
 
     def add_tags(tags)
         #TODO: need transaction here
-        HashTag.delete_all(:article_id => id)
+        #HashTag.delete_all(:article_id => id)
+        ArticlesHashTagsRelationship.delete_all(:article_id => id)
 
         htags = []
-        tags.split(' ').uniq.each do |tag|
-            htags << HashTag.new(:article_id => self.id, :name => self.class.remove_hash_if_not_exist(tag))
+        allTags = tags.split(' ').uniq
+        HashTags.create
+
+        allTags.each do |tag|
+            htags << HashTag.new(:name => self.class.remove_hash_if_not_exist(tag))
         end
         HashTag.import htags
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151229001715) do
+ActiveRecord::Schema.define(version: 20160102023653) do
 
   create_table "articles", force: :cascade do |t|
     t.text     "description"
@@ -22,6 +22,17 @@ ActiveRecord::Schema.define(version: 20151229001715) do
   end
 
   add_index "articles", ["user_id"], name: "index_articles_on_user_id"
+
+  create_table "articles_hash_tags_relationships", force: :cascade do |t|
+    t.integer  "article_id"
+    t.integer  "hash_tag_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "articles_hash_tags_relationships", ["article_id", "hash_tag_id"], name: "index_articles_hash_tags_rels_on_article_id_and_hash_tag_id", unique: true
+  add_index "articles_hash_tags_relationships", ["article_id"], name: "index_articles_hash_tags_relationships_on_article_id"
+  add_index "articles_hash_tags_relationships", ["hash_tag_id"], name: "index_articles_hash_tags_relationships_on_hash_tag_id"
 
   create_table "comments", force: :cascade do |t|
     t.integer  "user_id"
@@ -36,14 +47,11 @@ ActiveRecord::Schema.define(version: 20151229001715) do
 
   create_table "hash_tags", force: :cascade do |t|
     t.string   "name"
-    t.integer  "article_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  add_index "hash_tags", ["article_id", "name"], name: "index_hash_tags_on_article_id_and_name", unique: true
-  add_index "hash_tags", ["article_id"], name: "index_hash_tags_on_article_id"
-  add_index "hash_tags", ["name"], name: "index_hash_tags_on_name"
+  add_index "hash_tags", ["name"], name: "index_hash_tags_on_name", unique: true
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
