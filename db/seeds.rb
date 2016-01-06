@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-words = Faker::Lorem.words(30).uniq
+#words = Faker::Lorem.words(30).uniq
 
 5.times do |u|
     email = "exampleruser#{u}@fakeemail.com"
@@ -20,7 +20,8 @@ words = Faker::Lorem.words(30).uniq
         article = user.articles.create!(
             description: Faker::Lorem.paragraph
         )
-        hash_tag = HashTag.find_or_create_by!(name: words[rand(0..words.length-1)])
-        article.articles_hash_tags_relationships.create!(:hash_tag_id => hash_tag.id)
+        article.create_tags_and_relationships(Faker::Lorem.sentence(7))
+#        hash_tag = HashTag.find_or_create_by!(name: words[rand(0..words.length-1)])
+#        article.articles_hash_tags_relationships.create!(:hash_tag_id => hash_tag.id)
     end
 end

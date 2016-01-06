@@ -13,43 +13,19 @@ class ArticlesController < ApplicationController
 
     def create
         @article = current_user.articles.build(article_params)
-        begin
-            success = true
-            ActiveRecord::Base.transaction do
-                success &&= @article.save
-                if success
-                    tags = HashTag.create_tags(params[:article][:hash_tags])
-                    success &&= tags.nil?
-                    rels = ArticlesHashTagsRelationship.create_relationships(@article, tags)
-                    success &&= rels.nil?
-                else
-                    raise ActiveRecord::RecordInvalid.new(@article)
-                end
-            end
+        if @article.save && @article.create_tags_and_relationships(params[:article][:hash_tags])
             flash.alert = 'Created article successfully'
             redirect_to action: 'show', id: @article.id
-        rescue ActiveRecord::RecordInvalid => e
+        else
             render 'new'
         end
     end
     
     def update
-        begin
-            success = true
-            ActiveRecord::Base.transaction do
-                success &&= @article.update(article_params)
-                if success
-                    tags = HashTag.create_tags(params[:article][:hash_tags])
-                    success &&= tags.nil?
-                    rels = ArticlesHashTagsRelationship.create_relationships(@article, tags)
-                    sucess &&= rels.nil?
-                else
-                    raise ActiveRecord::RecordInvalid.new(@article)
-                end
-            end
+        if @article.update(article_params) && @article.create_tags_and_relationships(params[:article][:hash_tags])
             flash.alert = 'Updated article successfully'
             redirect_to action: 'show', id: @article.id
-        rescue ActiveRecord::RecordInvalid => e
+        else
             render 'edit'
         end
     end
@@ -60,6 +36,7 @@ class ArticlesController < ApplicationController
     end
 
     private
+
     def article_params
         params.require(:article).permit(:description, :picture)
     end

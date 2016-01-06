@@ -13,9 +13,10 @@ class HashTag < ActiveRecord::Base
 
         allTags = []
         tagNamesToBeInserted.each do |tagName|
-            allTags << HashTag.new(:name => tagName)
+            tag = HashTag.new(:name => tagName)
+            allTags << tag
         end
-        HashTag.import allTags
+        HashTag.import allTags, :validate => true
 
         HashTag.where('name IN (?)', tagNames)
     end

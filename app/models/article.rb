@@ -13,6 +13,7 @@ class Article < ActiveRecord::Base
     validate  :picture_size
     default_scope { order('articles.updated_at DESC') }
     #default_scope :order => 'article.updated_at DESC'
+    scope :from_users_followed_by, -> (user) { followed_by(user) }
 
     def self.search(tag)
         tag = HashTag.remove_hash_if_not_exist(tag)
@@ -21,8 +22,22 @@ class Article < ActiveRecord::Base
         .includes('user')
     end
 
+    def create_tags_and_relationships(tags)
+        article = self;
+        tags = HashTag.create_tags(tags)
+        if tags.empty?
+            false
+        end
+        ArticlesHashTagsRelationship.create_relationships(article, tags)
+    end
+
     private
     
+    def self.followed_by(user)
+        following_ids = "SELECT followed_id FROM users_relationships WHERE follower_id = :user_id"
+        where("user_id = :user_id OR (user_id IN (#{following_ids}))", :user_id => user)
+    end
+
     def picture_size
         if picture.size > 5.megabytes
             errors.add(:picture, "should be less than 5MB")

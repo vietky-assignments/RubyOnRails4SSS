@@ -7,9 +7,12 @@ class ArticlesHashTagsRelationship < ActiveRecord::Base
         tags.each do |tag|
             articlesHashtagsRels << ArticlesHashTagsRelationship.new(:article_id => article.id, :hash_tag_id => tag.id)
         end
-        ArticlesHashTagsRelationship.delete_all(:article_id => article.id)
-        ArticlesHashTagsRelationship.import articlesHashtagsRels
 
-        articlesHashtagsRels
+        ActiveRecord::Base.transaction do
+            ArticlesHashTagsRelationship.delete_all(:article_id => article.id)
+            ArticlesHashTagsRelationship.import articlesHashtagsRels
+        end
+
+        true
     end
 end
