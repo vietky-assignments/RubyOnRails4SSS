@@ -2,6 +2,9 @@ class UsersController < ApplicationController
     before_action :authenticate_user!
 
     def index
+        @articles = current_user.feed
+            .includes("hash_tags")
+            .paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
     end
     
     def show
@@ -12,7 +15,9 @@ class UsersController < ApplicationController
         end
 
         if @user
-            @articles = @user.articles.paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
+            @articles = @user.articles
+                .includes("hash_tags")
+                .paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
         else
             redirect_to new_user_session_path
         end
