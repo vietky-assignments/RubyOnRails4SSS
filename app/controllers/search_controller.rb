@@ -4,8 +4,12 @@ class SearchController < ApplicationController
     def index
         if params[:search]
             @articles = Article.search(params[:search])
+                .includes('hash_tags')
+                .includes('user')
         else
-            @articles = Article.all.includes('hash_tags').includes('user')
+            @articles = Article.all
+                .includes('hash_tags')
+                .includes('user')
         end
         @articles = @articles.paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
     end

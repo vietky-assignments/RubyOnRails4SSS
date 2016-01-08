@@ -6,7 +6,7 @@ class UsersController < ApplicationController
             .includes("hash_tags")
             .paginate(:page => params[:page], :per_page => GlobalConstants::ITEMS_PER_PAGE)
     end
-    
+
     def show
         if params[:id]
             @user = User.find_by_id(params[:id])

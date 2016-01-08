@@ -17,9 +17,11 @@ class Article < ActiveRecord::Base
 
     def self.search(tag)
         tag = HashTag.remove_hash_if_not_exist(tag)
-        Article.where(:id => ArticlesHashTagsRelationship.where(:hash_tag_id => HashTag.where("name like ?", "%#{tag}%")).select("article_id"))
-        .includes('hash_tags')
-        .includes('user')
+        Article.where(:id =>
+            ArticlesHashTagsRelationship
+                .where(:hash_tag_id => HashTag.where("name like ?", "%#{tag}%"))
+                .select("article_id")
+        )
     end
 
     def create_tags_and_relationships(tags)

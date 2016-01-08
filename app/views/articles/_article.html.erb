@@ -1,10 +1,10 @@
-<h3><%= link_to "Article " + article.id.to_s, article_path(:id=> article.id) %> (Author: 
+<h3><%= link_to "Article " + article.id.to_s, article_path(:id => article.id) %> (Author: 
     <% if current_user?(article.user) %>
     You
     <% else %>
     <%= user_link(article.user) %>
-    <% end %>
-)
+    <% end %>)
+    <%= render :partial => 'users/follow_form', :locals => { user: article.user } %>
 </h3>
 <div>
     <%= image_tag article.picture.url if article.picture? %>

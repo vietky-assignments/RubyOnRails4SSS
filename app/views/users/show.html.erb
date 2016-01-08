@@ -5,6 +5,7 @@
 <%= user_link(@user) %>'s
 <% end %>
 Articles</h1>
+<%= render :partial => 'users/follow_form', :locals => { :user => @user } %>
 
 <%= link_to 'New Article', new_article_path if current_user?(@user) %>
 

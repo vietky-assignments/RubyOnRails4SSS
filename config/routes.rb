@@ -11,12 +11,15 @@ Rails.application.routes.draw do
         end
     end
 
+    resources :users_relationships, only: [:create, :destroy]
     resources :users, only: [:index, :show]
     resources :articles, except: :index do
         resources :comments, only: [:create, :destroy]
     end
     
-    get '/search/', to: 'search#index'
+    get '/search/', :to => 'search#index'
+    get '/users/follow', :to => 'users#follow', :as => 'user_follow'
+    get '/users/unfollow', :to => 'users#unfollow', :as => 'user_unfollow'
     root 'users#show'
 
   # The priority is based upon order of creation: first created -> highest priority.
