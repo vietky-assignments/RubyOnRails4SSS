@@ -8,7 +8,7 @@ class UsersRelationshipsController < ApplicationController
 
         respond_to do |format|
             format.html { redirect_to @user }
-            format.js
+            format.js { render 'create', :locals => { user: @user } }
         end
     end
 
@@ -19,7 +19,7 @@ class UsersRelationshipsController < ApplicationController
 
         respond_to do |format|
             format.html { redirect_to current_user }
-            format.js
+            format.js { render 'destroy', :locals => { user: @user } }
         end
     end
 end
